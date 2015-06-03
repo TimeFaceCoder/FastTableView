@@ -29,11 +29,12 @@ extension NSAttributedString {
     }
     
     class func attributedStringForContentText(text: String) -> NSAttributedString {
+        let font = UIFont.systemFontOfSize(16)
         let descriptionAttributes =
-        [NSFontAttributeName:UIFont.systemFontOfSize(16),
+        [NSFontAttributeName:font,
             NSForegroundColorAttributeName: UIColor.blackColor(),
             NSBackgroundColorAttributeName: UIColor.clearColor(),
-            NSParagraphStyleAttributeName: NSParagraphStyle.contentParagraphStyle()]
+            NSParagraphStyleAttributeName: NSParagraphStyle.contentParagraphStyle(font)]
         return NSAttributedString(string: text, attributes: descriptionAttributes)
     }
 }
@@ -44,11 +45,13 @@ extension NSParagraphStyle {
         paragraphStyle.alignment = .Justified
         return paragraphStyle.copy() as! NSParagraphStyle
     }
-    class func contentParagraphStyle() -> NSParagraphStyle {
+    class func contentParagraphStyle(font: UIFont) -> NSParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .Justified
         paragraphStyle.lineSpacing = 6
         paragraphStyle.paragraphSpacing = 6
+        paragraphStyle.maximumLineHeight = font.lineHeight
+        paragraphStyle.minimumLineHeight = font.lineHeight
         return paragraphStyle.copy() as! NSParagraphStyle
     }
 }
