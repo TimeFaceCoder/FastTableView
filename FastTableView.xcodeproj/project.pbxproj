@@ -26,6 +26,7 @@
 		B0920A381B1E7CF800D4E33B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0920A371B1E7CF800D4E33B /* CoreGraphics.framework */; };
 		B0920A441B1E989E00D4E33B /* Factories.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0920A431B1E989E00D4E33B /* Factories.swift */; };
 		B0920A461B1E9B8900D4E33B /* FrameCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0920A451B1E9B8900D4E33B /* FrameCalculator.swift */; };
+		B0920A481B1EF0E900D4E33B /* CellTimeDefault@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0920A471B1EF0E900D4E33B /* CellTimeDefault@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		B0920A421B1E989D00D4E33B /* FastTableView-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FastTableView-Bridging-Header.h"; sourceTree = "<group>"; };
 		B0920A431B1E989E00D4E33B /* Factories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Factories.swift; sourceTree = "<group>"; };
 		B0920A451B1E9B8900D4E33B /* FrameCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameCalculator.swift; sourceTree = "<group>"; };
+		B0920A471B1EF0E900D4E33B /* CellTimeDefault@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellTimeDefault@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 			children = (
 				B0920A431B1E989E00D4E33B /* Factories.swift */,
 				B0920A451B1E9B8900D4E33B /* FrameCalculator.swift */,
+				B0920A471B1EF0E900D4E33B /* CellTimeDefault@2x.png */,
 				B0920A341B1DD14C00D4E33B /* UIImageEffects.h */,
 				B0920A351B1DD14C00D4E33B /* UIImageEffects.m */,
 				B07921171B1D96C50048C6E8 /* data.plist */,
@@ -277,6 +280,7 @@
 			files = (
 				B07920EB1B1D88300048C6E8 /* Main.storyboard in Resources */,
 				B07920F01B1D88300048C6E8 /* LaunchScreen.xib in Resources */,
+				B0920A481B1EF0E900D4E33B /* CellTimeDefault@2x.png in Resources */,
 				B07921181B1D96C50048C6E8 /* data.plist in Resources */,
 				B07920ED1B1D88300048C6E8 /* Images.xcassets in Resources */,
 			);

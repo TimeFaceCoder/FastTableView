@@ -23,6 +23,7 @@ PODS:
   - AsyncDisplayKit (1.2):
     - AsyncDisplayKit/ASDealloc2MainObject (= 1.2)
   - AsyncDisplayKit/ASDealloc2MainObject (1.2)
+  - pop (1.0.7)
   - REFormattedNumberField (1.1.5)
   - RETableViewManager (1.6):
     - REFormattedNumberField (~> 1.1.5)
@@ -35,12 +36,14 @@ PODS:
 DEPENDENCIES:
   - AFNetworking
   - AsyncDisplayKit
+  - pop
   - RETableViewManager
   - SDWebImage
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   AsyncDisplayKit: 32d5b9112b8c1b6644b54429e0cda4fbf6563781
+  pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
   REFormattedNumberField: be3d55dd709f65541fb26b7e1709da07903147f8
   RETableViewManager: 9667ecb29c005c32df40a1dd1828224840a351a2
   REValidation: 38c4de1be58455f8b00aab208ac80db316a66b7f

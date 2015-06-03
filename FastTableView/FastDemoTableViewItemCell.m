@@ -13,6 +13,7 @@
 #import "UIImageEffects.h"
 #import "FastTableView-Bridging-Header.h"
 #import "FastTableView-Swift.h"
+#import <pop/POP.h>
 
 const static CGFloat  kLineSpace        = 6.0f;
 const static CGFloat  kViewPadding      = 12.0f;
@@ -26,6 +27,8 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
     
 }
 @property (nonatomic ,assign) CGSize        imageSize;
+@property (nonatomic ,strong) CALayer       *placeholderLayer;
+@property (nonatomic ,strong) ASDisplayNode *containerNode;
 @property (nonatomic ,strong) ASImageNode   *backgroundImageNode;
 @property (nonatomic ,strong) ASImageNode   *contentImageNode;
 
@@ -37,7 +40,7 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
 @end
 
 @implementation FastDemoTableViewItemCell {
-    
+    BOOL drawed;
 }
 @dynamic item;
 
@@ -50,7 +53,8 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
             [self setLayoutMargins:UIEdgeInsetsZero];
         }
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        
+//        [self.layer addSublayer:self.placeholderLayer];
+//        [self addSubnode:self.containerNode];
         [self addSubnode:self.backgroundImageNode];
         [self addSubnode:self.contentImageNode];
         [self addSubnode:self.avatarImageNode];
@@ -68,110 +72,40 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
         FastDemoTableViewItem *lineItem = (FastDemoTableViewItem *)item;
         if ([[lineItem.data objectForKey:@"content"] length]) {
             //时光内容
-            height += kTopViewPadding + [FastDemoTableViewItemCell heightWithText:[lineItem.data objectForKey:@"content"]
-                                                                             font:[UIFont systemFontOfSize:16]
-                                                                            width:(CGRectGetWidth([[UIScreen mainScreen] bounds]) - 2*kViewPadding)
-                                                                            lines:3];
+            CGFloat width = CGRectGetWidth([[UIScreen mainScreen] bounds]) - kViewPadding * 2;
+            CGSize contentSize = [FastDemoTableViewItemCell findHeightForText:[lineItem.data objectForKey:@"content"]
+                                                                     havingWidth:width
+                                                                         andFont:[UIFont systemFontOfSize:16]];
+            height += contentSize.height;
+            lineItem.contentHeight = contentSize.height;
         }
         //时光图片
         if ([lineItem.data objectForKey:@"imageObjList"] && [[lineItem.data objectForKey:@"imageObjList"] count] > 0) {
             NSDictionary *imageModel = [[lineItem.data objectForKey:@"imageObjList"] objectAtIndex:0];
             CGFloat scale = [UIScreen mainScreen].bounds.size.width / [[imageModel objectForKey:@"imgWidth"] floatValue];
-            height += kTopViewPadding + [[imageModel objectForKey:@"imgHeight"] floatValue] * scale;
+            CGFloat imageHeight = [[imageModel objectForKey:@"imgHeight"] floatValue];
+            height += kTopViewPadding + imageHeight * scale;
+            lineItem.contentImageHeight = imageHeight;
         }
     }
     return height;
 }
 
-+ (CGFloat)heightWithText:(NSString *)text font:(UIFont*)font width:(CGFloat)width lines:(NSInteger)lines {
-    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectZero];
-    lbl.font = font;
-    lbl.numberOfLines = lines;
-    NSMutableAttributedString *content = [[NSMutableAttributedString alloc] initWithString:text];
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setLineSpacing:kLineSpace];//调整行间距
-    [paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
-    
-    [content addAttribute:NSParagraphStyleAttributeName
-                    value:paragraphStyle
-                    range:NSMakeRange(0, text.length)];
-    
-    lbl.attributedText = content;
-    CGRect frame = lbl.frame;
-    frame.size.width = width;
-    frame.size.height = [FastDemoTableViewItemCell getHeightOfLabel:text
-                                                      font:font
-                                                labelWidth:width
-                                                 lineSpace:kLineSpace
-                                                     lines:lines];
-    lbl.frame = frame;
-    [lbl sizeToFit];
-    
-    return lbl.frame.size.height;
-}
-
-+ (CGFloat)getHeightOfLabel:(NSString*)text
-                       font:(UIFont*)font
-                 labelWidth:(CGFloat)width
-                  lineSpace:(CGFloat)lineSpace
-                      lines:(NSInteger)lines {
-    if (text.length == 1) {
-        text = [NSString stringWithFormat:@"%@ ",text];
++ (CGSize)findHeightForText:(NSString *)text havingWidth:(CGFloat)widthValue andFont:(UIFont *)font {
+    CGSize size = CGSizeZero;
+    if (text) {
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        [paragraphStyle setLineSpacing:kLineSpace];
+        [paragraphStyle setParagraphSpacing:kLineSpace];
+        [paragraphStyle setAlignment:NSTextAlignmentJustified];
+        CGRect frame = [text boundingRectWithSize:CGSizeMake(widthValue, 100)
+                                          options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine
+                                       attributes:@{ NSFontAttributeName:font,
+                                                     NSParagraphStyleAttributeName:paragraphStyle}
+                                          context:nil];
+        size = CGSizeMake(frame.size.width, frame.size.height + 1);
     }
-    if (!lines) {
-        NSMutableAttributedString *content = [[NSMutableAttributedString alloc]
-                                              initWithString:text];
-        
-        
-        //创建字体以及字体大小
-        CTFontRef helvetica = CTFontCreateWithName(CFSTR("Helvetica"), font.pointSize, NULL);
-        [content addAttribute:(id)kCTFontAttributeName
-                        value:(__bridge id)helvetica
-                        range:NSMakeRange(0, [content length])];
-        //设置字体区域行间距
-        CTParagraphStyleSetting lineSpaceStyle;
-        lineSpaceStyle.spec = kCTParagraphStyleSpecifierLineSpacing;//指定为行间距属性
-        lineSpaceStyle.valueSize = sizeof(lineSpace);
-        lineSpaceStyle.value=&lineSpace;
-        
-        //创建样式数组
-        CTParagraphStyleSetting settings[]={
-            lineSpaceStyle
-        };
-        //设置样式
-        CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, 1);
-        
-        [content addAttribute:(id)kCTParagraphStyleAttributeName
-                        value:(__bridge id)paragraphStyle
-                        range:NSMakeRange(0, [content length])];
-        
-        // layout master
-        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)content);
-        
-        //计算文本绘制size
-        CGSize tmpSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,0), NULL, CGSizeMake(width, MAXFLOAT), NULL);
-        
-        CFRelease(helvetica);
-        CFRelease(paragraphStyle);
-        CFRelease(framesetter);
-        return tmpSize.height;
-    } else {
-        CGFloat lineHeight = font.lineHeight + lineSpace;
-        CGSize size = CGSizeMake(width, lineHeight * lines);
-        
-        /// Make a copy of the default paragraph style
-        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        /// Set line break mode
-        paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
-        /// Set text alignment
-        paragraphStyle.alignment = NSTextAlignmentCenter;
-        NSDictionary *attributes = @{NSFontAttributeName:font,
-                                     NSParagraphStyleAttributeName: paragraphStyle};
-        CGSize labelHeight = [text boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attributes context:nil].size;
-        //        CGSize labelHeight = [text sizeWithFont:font constrainedToSize:size lineBreakMode:NSLineBreakByCharWrapping];
-        
-        return labelHeight.height + 3;
-    }
+    return size;
 }
 
 - (void)cellDidLoad {
@@ -180,6 +114,48 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
 
 - (void)cellWillAppear {
     [super cellWillAppear];
+    [self drawViews];
+}
+
+
+- (void)cellDidDisappear {
+    [super cellDidDisappear];
+    //重用准备
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    _backgroundImageNode.image = nil;
+    _contentImageNode.image = nil;
+    _avatarImageNode.image = nil;
+    _titleTextNode.attributedString = nil;
+    _contentTextNode.attributedString = nil;
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [CATransaction begin];
+    [CATransaction setValue:(__bridge id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+    
+    _placeholderLayer.frame = self.bounds;
+    _containerNode.frame = self.bounds;
+    _backgroundImageNode.frame = self.bounds;
+    _contentImageNode.frame = CGRectMake(0, CGRectGetHeight(self.bounds) - kBottomAreaHeight - _imageSize.height,
+                                         _imageSize.width, _imageSize.height);
+    _contentTextNode.frame = CGRectMake(kViewPadding, kTopAreaHeight,
+                                        CGRectGetWidth(self.bounds) - kViewPadding * 2,
+                                        self.item.contentHeight);
+    [CATransaction commit];
+
+}
+
+
+- (void)drawViews {
+    [super drawViews];
+    
+    if (drawed) {
+//        return;
+    }
+    drawed = YES;
     if ([self.item.data objectForKey:@"imageObjList"] && [[self.item.data objectForKey:@"imageObjList"] count] > 0) {
         NSDictionary *imageModel = [[self.item.data objectForKey:@"imageObjList"] objectAtIndex:0];
         
@@ -192,63 +168,64 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
                                                         options:0
                                                        progress:NULL
                                                       completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
-        {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-                _backgroundImageNode.image = [UIImageEffects imageByApplyingExtraLightEffectToImage:image];
-                _contentImageNode.image = image;
-            });
-        }];
-        NSDictionary *authorObj = [self.item.data objectForKey:@"author"];
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:[authorObj objectForKey:@"avatar"]]
-                                                        options:0
-                                                       progress:NULL
-                                                      completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
-        {
-            _avatarImageNode.image = image;
-        }];
-        _nickNameTextNode.attributedString = [NSAttributedString attributedStringForNickName:[authorObj objectForKey:@"nickName"]];
-        
-        _titleTextNode.attributedString = [NSAttributedString attributedStringForTitleText:[self.item.data objectForKey:@"timeTitle"]];
-        
-        _contentTextNode.attributedString = [NSAttributedString attributedStringForDescriptionText:[self.item.data objectForKey:@"content"]];
+         {
+             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+                 _backgroundImageNode.image = [UIImageEffects imageByApplyingExtraLightEffectToImage:image];
+                 _contentImageNode.image = image;
+             });
+         }];
     }
-
-}
-
-
-- (void)cellDidDisappear {
-    [super cellDidDisappear];
-    //重用准备
-}
-
-- (void)prepareForReuse {
-    [super prepareForReuse];
-    _backgroundImageNode.image = nil;
     
-}
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    [CATransaction begin];
-    [CATransaction setValue:(__bridge id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-    _backgroundImageNode.frame = self.bounds;
-    _contentImageNode.frame = CGRectMake(0, CGRectGetHeight(self.bounds) - kBottomAreaHeight - _imageSize.height, _imageSize.width, _imageSize.height);
+    NSDictionary *authorObj = [self.item.data objectForKey:@"author"];
+    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:[authorObj objectForKey:@"avatar"]]
+                                                    options:0
+                                                   progress:NULL
+                                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
+     {
+         _avatarImageNode.image = image;
+     }];
+    _nickNameTextNode.attributedString = [NSAttributedString attributedStringForNickName:[authorObj objectForKey:@"nickName"]];
+    _titleTextNode.attributedString = [NSAttributedString attributedStringForTitleText:[self.item.data objectForKey:@"timeTitle"]];
+    _contentTextNode.attributedString = [NSAttributedString attributedStringForContentText:[self.item.data objectForKey:@"content"]];
     
-    [CATransaction commit];
-    
-}
-
-
-- (void)drawViews {
-    [super drawViews];
 }
 - (void)clearViews {
     [super clearViews];
+    
+    if (!drawed) {
+        return;
+    }
+    //CLEAR
+    drawed = NO;
 }
 - (void)releaseMemory {
     [super releaseMemory];
 }
 
 #pragma mark - Privates
+
+- (CALayer *)placeholderLayer {
+    if (!_placeholderLayer) {
+        _placeholderLayer = [CALayer new];
+        _placeholderLayer.contentsGravity = kCAGravityResizeAspectFill;
+        _placeholderLayer.contentsScale = [[UIScreen mainScreen] scale];
+        _placeholderLayer.backgroundColor = [[UIColor colorWithHue:0 saturation:0 brightness:0.85 alpha:1] CGColor];
+        _placeholderLayer.contents = (__bridge id)([[UIImage imageNamed:@"CellTimeDefault.png"] CGImage]);
+    }
+    return _placeholderLayer;
+}
+
+- (ASDisplayNode *)containerNode {
+    if (!_containerNode) {
+        _containerNode = [[ASDisplayNode alloc] init];
+        _containerNode.layerBacked = YES;
+        _containerNode.shouldRasterizeDescendants = YES;
+        _containerNode.borderColor = [[UIColor colorWithHue:0 saturation:0 brightness:0.85 alpha:0.2] CGColor];
+        _containerNode.borderWidth = 1;
+        _containerNode.frame = self.bounds;
+    }
+    return _containerNode;
+}
 
 - (ASImageNode *)backgroundImageNode {
     if (!_backgroundImageNode) {
@@ -264,6 +241,8 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
         _contentImageNode = [ASImageNode new];
         _contentImageNode.contentMode = UIViewContentModeScaleAspectFill;
         _contentImageNode.layerBacked = true;
+        _contentImageNode.frame = CGRectMake(0, CGRectGetHeight(self.bounds) - kBottomAreaHeight - self.item.contentImageHeight,
+                                             CGRectGetWidth([[UIScreen mainScreen] bounds]), self.item.contentImageHeight);
     }
     return _contentImageNode;
 }
@@ -284,8 +263,11 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
     if (!_nickNameTextNode) {
         _nickNameTextNode = [ASTextNode new];
         _nickNameTextNode.layerBacked = true;
+        _nickNameTextNode.placeholderColor = [UIColor blueColor];
         CGFloat x = kViewPadding*2 + kAvatarSize;
-        _nickNameTextNode.frame = CGRectMake(x, kViewPadding, CGRectGetWidth(self.bounds) - x - kViewPadding, kTitleHeight);
+        _nickNameTextNode.frame = CGRectMake(x, kViewPadding,
+                                             CGRectGetWidth(self.bounds) - x - kViewPadding,
+                                             kTitleHeight);
     }
     return _nickNameTextNode;
 }
@@ -294,7 +276,8 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
     if (!_titleTextNode) {
         _titleTextNode = [ASTextNode new];
         _titleTextNode.layerBacked = true;
-        _titleTextNode.frame = CGRectMake(kViewPadding, kTopAreaHeight - kViewPadding - kTitleHeight, CGRectGetWidth(self.bounds) - kViewPadding * 2, kTitleHeight);
+        _titleTextNode.frame = CGRectMake(kViewPadding, kTopAreaHeight - kViewPadding - kTitleHeight,
+                                          CGRectGetWidth(self.bounds) - kViewPadding * 2, kTitleHeight);
     }
     return _titleTextNode;
 }
@@ -303,7 +286,11 @@ const static CGFloat  kBottomAreaHeight = 36.0f;
     if (!_contentTextNode) {
         _contentTextNode = [ASTextNode new];
         _contentTextNode.layerBacked = true;
-        _contentTextNode.frame = CGRectMake(kViewPadding, kTopAreaHeight, CGRectGetWidth(self.bounds) - kViewPadding * 2, 0);
+        _contentTextNode.truncationMode = NSLineBreakByTruncatingTail;
+        _contentTextNode.maximumLineCount = 3;
+        _contentTextNode.frame = CGRectMake(kViewPadding, kTopAreaHeight,
+                                            CGRectGetWidth(self.bounds) - kViewPadding * 2,
+                                            self.item.contentHeight);
     }
     return _contentTextNode;
 }

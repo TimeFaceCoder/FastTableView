@@ -10,9 +10,13 @@
 
 @interface FastDemoTableViewItem : RETableViewItem
 
-@property (nonatomic, strong) NSDictionary *data;
+@property (nonatomic, strong) NSDictionary  *data;
 
-@property (nonatomic, assign) NSInteger index;
+@property (nonatomic, assign) NSInteger     index;
+
+@property (nonatomic, assign) CGFloat       contentHeight;
+
+@property (nonatomic, assign) CGFloat       contentImageHeight;
 
 + (FastDemoTableViewItem*)itemWithModel:(NSDictionary*)data;
 
