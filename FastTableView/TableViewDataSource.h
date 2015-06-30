@@ -1,7 +1,7 @@
 //
 //  TableViewDataSource.h
 //  FastTableView
-//
+//  全局TableView数据集与UI处理,沟通 View 与 Data
 //  Created by Melvin on 6/2/15.
 //  Copyright (c) 2015 TimeFace. All rights reserved.
 //
@@ -32,7 +32,6 @@ typedef NS_ENUM(NSInteger, LoadPolicy) {
 
 
 - (id)initWithTableView:(TFTableView *)tableView;
-
 
 - (void)load:(LoadPolicy)loadPolicy;
 

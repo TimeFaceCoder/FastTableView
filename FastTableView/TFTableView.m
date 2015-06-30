@@ -8,8 +8,12 @@
 
 #import "TFTableView.h"
 #import "TFTableViewCell.h"
-#import <AsyncDisplayKit/AsyncDisplayKit.h>
 
+@interface TFTableView() {
+    
+}
+
+@end
 @implementation TFTableView {
     NSMutableArray  *needLoadArray;
     BOOL            scrollToToping;
@@ -24,21 +28,27 @@
     return self;
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+- (void)tableViewWillBeginDragging:(TFTableView *)scrollView {
     [needLoadArray removeAllObjects];
 }
 
 //按需加载 - 如果目标行与当前行相差超过指定行数，只在目标滚动范围的前后指定3行加载。
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+- (void)tableViewWillEndDragging:(TFTableView *)scrollView
+                     withVelocity:(CGPoint)velocity
+              targetContentOffset:(inout CGPoint *)targetContentOffset {
+    
     NSIndexPath *ip = [self indexPathForRowAtPoint:CGPointMake(0, targetContentOffset->y)];
     NSIndexPath *cip = [[self indexPathsForVisibleRows] firstObject];
     NSInteger skipCount = 8;
     if (labs(cip.row-ip.row) > skipCount) {
-        NSArray *temp = [self indexPathsForRowsInRect:CGRectMake(0, targetContentOffset->y, self.frame.size.width, self.frame.size.height)];
+        NSArray *temp = [self indexPathsForRowsInRect:CGRectMake(0, targetContentOffset->y,
+                                                                 self.frame.size.width,
+                                                                 self.frame.size.height)];
         NSMutableArray *arr = [NSMutableArray arrayWithArray:temp];
         if (velocity.y < 0) {
             NSIndexPath *indexPath = [temp lastObject];
-            NSInteger totalCount = [self.dataSource tableView:self numberOfRowsInSection:indexPath.section];
+            NSInteger totalCount = [self.dataSource tableView:self
+                                        numberOfRowsInSection:indexPath.section];
             if (indexPath.row + 3 < totalCount) {
                 [arr addObject:[NSIndexPath indexPathForRow:indexPath.row+1 inSection:0]];
                 [arr addObject:[NSIndexPath indexPathForRow:indexPath.row+2 inSection:0]];
@@ -56,20 +66,33 @@
     }
 }
 
-- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
+- (BOOL)tableViewShouldScrollToTop:(TFTableView *)scrollView {
     scrollToToping = YES;
     return YES;
 }
 
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+- (void)tableViewDidEndScrollingAnimation:(TFTableView *)scrollView {
     scrollToToping = NO;
     [self loadContent];
 }
 
-- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+- (void)tableViewDidScrollToTop:(TFTableView *)scrollView {
     scrollToToping = NO;
     [self loadContent];
 }
+
+- (void)callCellForRowAtIndexPath:(NSIndexPath *)indexPath cell:(TFTableViewCell *)cell {
+    [cell clearViews];
+    if (needLoadArray.count > 0 && [needLoadArray indexOfObject:indexPath]==NSNotFound) {
+        [cell clearViews];
+        return;
+    }
+    if (scrollToToping) {
+        return;
+    }
+    [cell drawViews];
+}
+
 
 //用户触摸时第一时间加载内容
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {

@@ -19,6 +19,14 @@ extension NSAttributedString {
         return NSAttributedString(string: text, attributes: nickNameAttributes)
     }
     
+    class func attributedStringForTimeFrom(text :String) -> NSAttributedString {
+        let timeAttributes =
+        [NSFontAttributeName: UIFont.boldSystemFontOfSize(10),
+            NSForegroundColorAttributeName: UIColor(red: 153/255, green: 153/255, blue: 153/255, alpha: 1),
+            NSBackgroundColorAttributeName: UIColor.clearColor()]
+        return NSAttributedString(string: text, attributes: timeAttributes)
+    }
+    
     class func attributedStringForTitleText(text: String) -> NSAttributedString {
         let titleAttributes =
         [NSFontAttributeName: UIFont.boldSystemFontOfSize(16),
@@ -37,6 +45,43 @@ extension NSAttributedString {
             NSParagraphStyleAttributeName: NSParagraphStyle.contentParagraphStyle(font)]
         return NSAttributedString(string: text, attributes: descriptionAttributes)
     }
+    class func attributedStringForBookTitle(text :String) -> NSAttributedString {
+        let timeAttributes =
+        [NSFontAttributeName: UIFont.boldSystemFontOfSize(14),
+            NSForegroundColorAttributeName: UIColor(red: 153/255, green: 153/255, blue: 153/255, alpha: 1),
+            NSBackgroundColorAttributeName: UIColor.clearColor()]
+        return NSAttributedString(string: text, attributes: timeAttributes)
+    }
+    class func attributedStringForLikeNode(text :String) -> NSAttributedString {
+        let font = UIFont.systemFontOfSize(14)
+        let likeAttributes =
+        [NSFontAttributeName: font,
+            NSForegroundColorAttributeName: UIColor(red: 153/255, green: 153/255, blue: 153/255, alpha: 1),
+            NSBackgroundColorAttributeName: UIColor.clearColor(),
+            NSParagraphStyleAttributeName: NSParagraphStyle.likeParagraphStyle(font)]
+        let image = UIImage(named: "TimeLineLike")
+        let likeAttributeString = NSMutableAttributedString(string: text, attributes: likeAttributes)
+        let textAttachment = NSTextAttachment()
+        textAttachment.image = image
+        likeAttributeString.replaceCharactersInRange(NSMakeRange(0, 3), withAttributedString: NSAttributedString(attachment: textAttachment))
+        
+        return likeAttributeString
+    }
+    class func attributedStringForCommentNode(text :String) -> NSAttributedString {
+        let font = UIFont.systemFontOfSize(14)
+        let commentAttributes =
+        [NSFontAttributeName: font,
+            NSForegroundColorAttributeName: UIColor(red: 153/255, green: 153/255, blue: 153/255, alpha: 1),
+            NSBackgroundColorAttributeName: UIColor.clearColor(),
+            NSParagraphStyleAttributeName: NSParagraphStyle.likeParagraphStyle(font)]
+        let image = UIImage(named: "TimeLineComment")
+        let commentAttributeString = NSMutableAttributedString(string: text, attributes: commentAttributes)
+        let textAttachment = NSTextAttachment()
+        textAttachment.image = image
+        commentAttributeString.replaceCharactersInRange(NSMakeRange(0, 3), withAttributedString: NSAttributedString(attachment: textAttachment))
+        
+        return commentAttributeString
+    }
 }
 
 extension NSParagraphStyle {
@@ -50,6 +95,13 @@ extension NSParagraphStyle {
         paragraphStyle.alignment = .Justified
         paragraphStyle.lineSpacing = 6
         paragraphStyle.paragraphSpacing = 6
+        paragraphStyle.maximumLineHeight = font.lineHeight
+        paragraphStyle.minimumLineHeight = font.lineHeight
+        return paragraphStyle.copy() as! NSParagraphStyle
+    }
+    class func likeParagraphStyle(font: UIFont) -> NSParagraphStyle {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .Justified
         paragraphStyle.maximumLineHeight = font.lineHeight
         paragraphStyle.minimumLineHeight = font.lineHeight
         return paragraphStyle.copy() as! NSParagraphStyle

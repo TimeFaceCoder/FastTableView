@@ -22,6 +22,7 @@
 @end
 
 @implementation TableViewDataSource {
+    
     NSMutableArray      *_dataItems;
     NSIndexPath         *_currentIndexPath;
     RETableViewManager  *_manager;
@@ -34,6 +35,7 @@
 
 
 - (id)initWithTableView:(TFTableView *)tableView {
+    
     self = [super init];
     if (!self)
         return nil;
@@ -72,7 +74,30 @@
 
 //按需加载 - 如果目标行与当前行相差超过指定行数，只在目标滚动范围的前后指定3行加载。
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    NSLog(@"scrollViewWillEndDragging");
+    if ([_tableView respondsToSelector:@selector(tableViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        [_tableView tableViewWillEndDragging:_tableView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
+}
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if ([_tableView respondsToSelector:@selector(tableViewWillBeginDragging:)]) {
+        [_tableView tableViewWillBeginDragging:_tableView];
+    }
+}
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
+    if ([_tableView respondsToSelector:@selector(tableViewShouldScrollToTop:)]) {
+       return [_tableView tableViewShouldScrollToTop:_tableView];
+    }
+    return YES;
+}
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    if ([_tableView respondsToSelector:@selector(tableViewDidEndScrollingAnimation:)]) {
+        [_tableView tableViewDidEndScrollingAnimation:_tableView];
+    }
+}
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    if ([_tableView respondsToSelector:@selector(tableViewDidScrollToTop:)]) {
+        [_tableView tableViewDidScrollToTop:_tableView];
+    }
 }
 
 @end

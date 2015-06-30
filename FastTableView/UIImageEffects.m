@@ -68,7 +68,11 @@
 + (UIImage *)imageByApplyingExtraLightEffectToImage:(UIImage*)inputImage
 {
     UIColor *tintColor = [UIColor colorWithWhite:0.97 alpha:0.82];
-    return [self imageByApplyingBlurToImage:inputImage withRadius:40 tintColor:tintColor saturationDeltaFactor:1.8 maskImage:nil];
+    return [self imageByApplyingBlurToImage:inputImage
+                                 withRadius:40
+                                  tintColor:tintColor
+                      saturationDeltaFactor:1.8
+                                  maskImage:nil];
 }
 
 

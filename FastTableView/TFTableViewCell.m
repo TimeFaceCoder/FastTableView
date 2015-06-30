@@ -7,6 +7,7 @@
 //
 
 #import "TFTableViewCell.h"
+#import "TFTableView.h"
 
 @implementation TFTableViewCell
 
@@ -29,6 +30,25 @@
 
 - (void)releaseMemory {
     
+}
+
+- (void)cellDidLoad {
+    [super cellDidLoad];
+}
+
+- (void)cellWillAppear {
+    [super cellWillAppear];
+    if ([self.parentTableView isKindOfClass:[TFTableView class]]) {
+        [(TFTableView *)self.parentTableView callCellForRowAtIndexPath:
+         [NSIndexPath indexPathForRow:self.rowIndex inSection:self.sectionIndex]
+                                                                  cell:self];
+    }
+}
+
+
+- (void)cellDidDisappear {
+    [super cellDidDisappear];
+    //重用准备
 }
 
 @end

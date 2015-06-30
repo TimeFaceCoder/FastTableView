@@ -26,7 +26,6 @@
 		B0920A381B1E7CF800D4E33B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0920A371B1E7CF800D4E33B /* CoreGraphics.framework */; };
 		B0920A441B1E989E00D4E33B /* Factories.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0920A431B1E989E00D4E33B /* Factories.swift */; };
 		B0920A461B1E9B8900D4E33B /* FrameCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0920A451B1E9B8900D4E33B /* FrameCalculator.swift */; };
-		B0920A481B1EF0E900D4E33B /* CellTimeDefault@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0920A471B1EF0E900D4E33B /* CellTimeDefault@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,7 +74,6 @@
 		B0920A421B1E989D00D4E33B /* FastTableView-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FastTableView-Bridging-Header.h"; sourceTree = "<group>"; };
 		B0920A431B1E989E00D4E33B /* Factories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Factories.swift; sourceTree = "<group>"; };
 		B0920A451B1E9B8900D4E33B /* FrameCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameCalculator.swift; sourceTree = "<group>"; };
-		B0920A471B1EF0E900D4E33B /* CellTimeDefault@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CellTimeDefault@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +139,6 @@
 			children = (
 				B0920A431B1E989E00D4E33B /* Factories.swift */,
 				B0920A451B1E9B8900D4E33B /* FrameCalculator.swift */,
-				B0920A471B1EF0E900D4E33B /* CellTimeDefault@2x.png */,
 				B0920A341B1DD14C00D4E33B /* UIImageEffects.h */,
 				B0920A351B1DD14C00D4E33B /* UIImageEffects.m */,
 				B07921171B1D96C50048C6E8 /* data.plist */,
@@ -242,7 +239,8 @@
 		B07920D41B1D88300048C6E8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = TimeFace;
 				TargetAttributes = {
 					B07920DB1B1D88300048C6E8 = {
@@ -280,7 +278,6 @@
 			files = (
 				B07920EB1B1D88300048C6E8 /* Main.storyboard in Resources */,
 				B07920F01B1D88300048C6E8 /* LaunchScreen.xib in Resources */,
-				B0920A481B1EF0E900D4E33B /* CellTimeDefault@2x.png in Resources */,
 				B07921181B1D96C50048C6E8 /* data.plist in Resources */,
 				B07920ED1B1D88300048C6E8 /* Images.xcassets in Resources */,
 			);
@@ -407,6 +404,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -476,6 +474,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = FastTableView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "cn.timeface.base.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "FastTableView/FastTableView-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -490,6 +489,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = FastTableView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "cn.timeface.base.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "FastTableView/FastTableView-Bridging-Header.h";
 			};
@@ -509,6 +509,7 @@
 				);
 				INFOPLIST_FILE = FastTableViewTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "cn.timeface.base.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FastTableView.app/FastTableView";
 			};
@@ -524,6 +525,7 @@
 				);
 				INFOPLIST_FILE = FastTableViewTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "cn.timeface.base.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FastTableView.app/FastTableView";
 			};
