@@ -153,16 +153,16 @@ const static CGFloat  kBottomControlSize= 16.0f;
 }
 
 - (void)clearViewsForReuse {
-    
-    _backgroundImageNode.image = nil;
-    _contentImageNode.image = nil;
-    _avatarImageNode.image = nil;
-    _titleTextNode.attributedString = nil;
-    _contentTextNode.attributedString = nil;
-    _timeFromTextNode.attributedString = nil;
+    _nickNameTextNode.attributedString  = nil;
+    _backgroundImageNode.image          = nil;
+    _contentImageNode.image             = nil;
+    _avatarImageNode.image              = nil;
+    _titleTextNode.attributedString     = nil;
+    _contentTextNode.attributedString   = nil;
+    _timeFromTextNode.attributedString  = nil;
     _bookTitleTextNode.attributedString = nil;
-    _commentTextNode.attributedString = nil;
-    _likeTextNode.attributedString = nil;
+    _commentTextNode.attributedString   = nil;
+    _likeTextNode.attributedString      = nil;
 }
 - (void)layoutSubviews {
     [super layoutSubviews];

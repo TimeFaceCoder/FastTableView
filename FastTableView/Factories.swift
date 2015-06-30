@@ -1,6 +1,6 @@
 //
 //  Factories.swift
-//  Layers
+//  FastTableView
 //
 //  Created by René Cacheaux on 10/11/14.
 //  Copyright (c) 2014 Razeware LLC. All rights reserved.
